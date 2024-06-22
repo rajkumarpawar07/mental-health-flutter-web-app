@@ -97,7 +97,7 @@ class SignupScreenController extends GetxController {
       phoneNumber.clear();
       gender.text = '';
       // move to verify screen
-      Get.offNamed('/login');
+      Get.offNamed('/');
     } catch (error) {
       isLoading.value = false;
       Get.snackbar('Oh Snap!', error.toString(),

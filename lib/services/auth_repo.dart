@@ -37,6 +37,7 @@ class AuthenticationRepository extends GetxController {
       return await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
     } catch (e) {
+      print('Error: $e');
       throw "Something went wrong. Please try again";
     }
   }
@@ -46,6 +47,7 @@ class AuthenticationRepository extends GetxController {
     try {
       await _auth.currentUser?.sendEmailVerification();
     } catch (e) {
+      print('Error:==> $e');
       throw "Something went wrong. Please try again";
     }
   }

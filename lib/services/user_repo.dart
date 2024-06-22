@@ -16,6 +16,7 @@ class UserRepositoy extends GetxController {
     try {
       await _db.collection("Users").doc(user.id).set(user.toJSON());
     } catch (e) {
+      print('Error: $e');
       throw "Something went wrong. Please try again";
     }
   }

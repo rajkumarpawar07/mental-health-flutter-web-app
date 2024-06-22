@@ -55,7 +55,7 @@ class LoginScreenController extends GetxController {
       isLoading.value = false;
       Get.snackbar(
         "Oh Snap!",
-        e.toString(),
+        "Something went wrong. Please try again",
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(10),
         colorText: Colors.red,
@@ -72,7 +72,8 @@ class LoginScreenController extends GetxController {
   Future<void> updateStreak(String userId) async {
     DocumentSnapshot userDoc = await getUserData(userId);
     if (userDoc.exists) {
-      DateTime lastActive = userDoc['LastActive'].toDate();
+      Timestamp lastActiveInTimeStamp = userDoc['LastActive'] as Timestamp;
+      DateTime lastActive = lastActiveInTimeStamp.toDate();
       int currentStreak = userDoc['Streak'];
 
       DateTime now = DateTime.now();
@@ -137,7 +138,7 @@ class LoginScreenController extends GetxController {
     } catch (e) {
       print('Error:==> $e');
       signingWithGoogle.value = false;
-      Get.snackbar("Oh Snap!", e.toString(),
+      Get.snackbar("Oh Snap!", "Please try again",
           snackPosition: SnackPosition.BOTTOM,
           margin: const EdgeInsets.all(10),
           colorText: Colors.red);

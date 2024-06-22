@@ -50,7 +50,7 @@ class UserModel {
       'PhoneNumber': phoneNumber,
       'ProfilePicture': profilePicture,
       'Streak': streak,
-      'LastActive': profilePicture,
+      'LastActive': lastActive,
     };
   }
 
