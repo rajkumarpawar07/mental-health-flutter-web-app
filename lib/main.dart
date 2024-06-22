@@ -73,7 +73,7 @@ class _MyAppState extends State<MyApp> {
         '/forget-password': (context) => const ForgetPasswordScreen(),
         // '/nav-bar': (context) => BottomNavBarScreen(),
         '/home': (context) => const MyHomePage(),
-        // '/quote': (context) => const MyHomePage(),
+        '/admin-home': (context) => const MyHomePage(),
       },
     );
   }
