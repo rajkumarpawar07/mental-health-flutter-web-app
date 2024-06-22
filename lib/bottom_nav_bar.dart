@@ -4,10 +4,6 @@ import 'package:ai_chatbot/features/chatbot/chatbot_screen.dart';
 import 'package:ai_chatbot/features/home/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:bottom_nav_layout/bottom_nav_layout.dart';
-import 'package:glass_kit/glass_kit.dart';
 
 class BottomNavBarScreen extends StatefulWidget {
   BottomNavBarScreen({super.key});

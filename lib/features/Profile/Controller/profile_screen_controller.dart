@@ -14,6 +14,7 @@ class ProfileScreenController extends GetxController {
   final gender = TextEditingController();
   RxBool readOnly = true.obs;
   RxBool isLoading = false.obs;
+  int streak = 0;
   // AuthenticationRepository.instance.authUser?.uid
   @override
   void onInit() {
@@ -37,6 +38,7 @@ class ProfileScreenController extends GetxController {
         email.text = userDoc['Email'];
         phoneNumber.text = userDoc['PhoneNumber'];
         gender.text = userDoc['Gender'];
+        streak = userDoc['Streak'];
       } else {
         print('User document does not exist');
       }

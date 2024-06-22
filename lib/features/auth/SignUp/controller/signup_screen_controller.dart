@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -67,6 +68,8 @@ class SignupScreenController extends GetxController {
           gender: gender.text.trim(),
           password: password.text.trim(),
           phoneNumber: phoneNumber.text.trim(),
+          streak: 1,
+          lastActive: Timestamp.now(),
           profilePicture: "");
 
       final userRepository = Get.put(UserRepositoy());

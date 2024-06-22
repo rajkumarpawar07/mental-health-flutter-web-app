@@ -1,4 +1,5 @@
 import 'package:ai_chatbot/services/user_repo.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,15 +36,16 @@ class UserController extends GetxController {
 
           // map data
           final user = UserModel(
-            id: userCredentials.user!.uid,
-            name: userCredentials.user!.displayName ?? '',
-            email: userCredentials.user!.email ?? '',
-            phoneNumber: userCredentials.user!.phoneNumber ?? '',
-            profilePicture: userCredentials.user!.photoURL ?? '',
-            age: 0,
-            gender: '',
-            password: '',
-          );
+              id: userCredentials.user!.uid,
+              name: userCredentials.user!.displayName ?? '',
+              email: userCredentials.user!.email ?? '',
+              phoneNumber: userCredentials.user!.phoneNumber ?? '',
+              profilePicture: userCredentials.user!.photoURL ?? '',
+              age: 0,
+              gender: '',
+              password: '',
+              streak: 0,
+              lastActive: Timestamp.now());
 
           // save user data
           await userRespository.saveUserRecord(user);

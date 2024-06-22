@@ -79,4 +79,13 @@ class AuthenticationRepository extends GetxController {
       throw "Something went wrong. Please try again";
     }
   }
+
+  Future<void> logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Get.offAllNamed('/');
+    } catch (e) {
+      throw "Something went wrong. Please try again";
+    }
+  }
 }

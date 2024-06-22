@@ -74,7 +74,6 @@ class _MyAppState extends State<MyApp> {
         // '/nav-bar': (context) => BottomNavBarScreen(),
         '/home': (context) => const MyHomePage(),
         // '/quote': (context) => const MyHomePage(),
-        '/test-screen-1': (context) => const Animation1Screen(),
       },
     );
   }

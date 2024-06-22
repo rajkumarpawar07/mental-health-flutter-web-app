@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
-import 'package:metaballs/metaballs.dart';
 
 import '../../testScreens/test_screen_1.dart';
 
@@ -304,7 +303,8 @@ class _MyHomePageState extends State<MyHomePage>
                                         text: TextSpan(
                                           children: [
                                             TextSpan(
-                                              text: '1 ',
+                                              text:
+                                                  '${controller.streak.toString()} ',
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: MediaQuery.of(context)

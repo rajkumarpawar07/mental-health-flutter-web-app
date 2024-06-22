@@ -9,6 +9,8 @@ class UserModel {
   final String password;
   String phoneNumber;
   String profilePicture;
+  final int streak;
+  final Timestamp lastActive;
 
   UserModel({
     required this.id,
@@ -19,6 +21,8 @@ class UserModel {
     required this.password,
     required this.phoneNumber,
     required this.profilePicture,
+    required this.streak,
+    required this.lastActive,
   });
 
   /// static function to create a empty user model
@@ -31,6 +35,8 @@ class UserModel {
         age: 0,
         gender: '',
         password: '',
+        streak: 0,
+        lastActive: Timestamp.now(),
       );
 
   /// Covert model to JSON
@@ -43,6 +49,8 @@ class UserModel {
       'Password': password,
       'PhoneNumber': phoneNumber,
       'ProfilePicture': profilePicture,
+      'Streak': streak,
+      'LastActive': profilePicture,
     };
   }
 
@@ -60,6 +68,8 @@ class UserModel {
         password: data['Password'] ?? '',
         phoneNumber: data['PhoneNumber'] ?? '',
         profilePicture: data['ProfilePicture'] ?? '',
+        streak: data['Streak'] ?? 0,
+        lastActive: data['LastActive'] ?? Timestamp.now(),
       );
     } else {
       return UserModel.empty();

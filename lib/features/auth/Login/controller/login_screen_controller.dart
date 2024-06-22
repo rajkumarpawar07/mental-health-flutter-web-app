@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,25 +29,11 @@ class LoginScreenController extends GetxController {
         return;
       }
 
-      // final _auth = FirebaseAuth.instance;
-      // final user = _auth.currentUser;
-      // if (user != null) {
-      //   // if user is logged in
-      //   if (!user.emailVerified) {
-      //     Get.snackbar(
-      //       'Email verification pending...',
-      //       'Please verify your email in order to continue...',
-      //       snackPosition: SnackPosition.BOTTOM,
-      //       colorText: Colors.green,
-      //       margin: EdgeInsets.all(10),
-      //     );
-      //     return;
-      //   }
-      // }
-
       // login user using emil & password authentication
       await AuthenticationRepository.instance
           .loginWithEmailAndPassword(email.text.trim(), password.text.trim());
+
+      await updateStreak(AuthenticationRepository.instance.authUser!.uid);
 
       // remove loader
       isLoading.value = false;
@@ -58,6 +45,7 @@ class LoginScreenController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(10),
         colorText: Colors.green,
+        duration: const Duration(seconds: 2),
       );
 
       // redirect
@@ -73,6 +61,57 @@ class LoginScreenController extends GetxController {
         colorText: Colors.red,
       );
     }
+  }
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<DocumentSnapshot> getUserData(String userId) async {
+    return await _firestore.collection('Users').doc(userId).get();
+  }
+
+  Future<void> updateStreak(String userId) async {
+    DocumentSnapshot userDoc = await getUserData(userId);
+    if (userDoc.exists) {
+      DateTime lastActive = userDoc['LastActive'].toDate();
+      int currentStreak = userDoc['Streak'];
+
+      DateTime now = DateTime.now();
+      if (_isSameDay(now, lastActive)) {
+        // User already active today
+        print('User already active today');
+        return;
+      } else if (_isNextDay(now, lastActive)) {
+        // Continue streak
+        await _firestore.collection('Users').doc(userId).update({
+          'LastActive': now,
+          'Streak': currentStreak + 1,
+        });
+      } else {
+        // Reset streak
+        await _firestore.collection('Users').doc(userId).update({
+          'LastActive': now,
+          'Streak': 1,
+        });
+      }
+    } else {
+      print('else case');
+      // New user document
+      // await _firestore.collection('Users').doc(userId).set({
+      //   'LastActive': DateTime.now(),
+      //   'Streak': 1,
+      // });
+    }
+  }
+
+  bool _isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
+  bool _isNextDay(DateTime date1, DateTime date2) {
+    DateTime nextDay = DateTime(date2.year, date2.month, date2.day + 1);
+    return _isSameDay(date1, nextDay);
   }
 
   RxBool signingWithGoogle = false.obs;

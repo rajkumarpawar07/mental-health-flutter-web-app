@@ -6,4 +6,6 @@ class AiChatBotController extends GetxController {
 
   final chatController = TextEditingController();
   RxBool isChatBotActive = false.obs;
+
+  RxBool voiceInput = false.obs;
 }

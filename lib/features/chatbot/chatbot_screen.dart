@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:lottie/lottie.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'controller/chat_bot_controller.dart';
 
 class AiChatbotScreen extends StatefulWidget {
@@ -49,20 +49,22 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
                 ),
                 // SizedBox(height: 20),
                 Center(
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    // decoration: BoxDecoration(
-                    //   shape: BoxShape.circle,
-                    //   gradient: RadialGradient(
-                    //     colors: [Colors.blueAccent, Colors.deepPurple],
-                    //   ),
-                    // ),
-                    child: Center(
+                  child: Stack(children: [
+                    Center(
                       child: Obx(
                         () => Lottie.asset(
                           animate: controller.isChatBotActive.value,
-
+                          'assets/lottie/ai_animation.json',
+                          // Replace with your SVG asset
+                          width: 150,
+                          height: 150,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Obx(
+                        () => Lottie.asset(
+                          animate: controller.isChatBotActive.value,
                           'assets/lottie/home_animation.json',
                           // Replace with your SVG asset
                           width: 150,
@@ -70,8 +72,9 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
                         ),
                       ),
                     ),
-                  ),
+                  ]),
                 ),
+
                 const SizedBox(height: 40),
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -119,10 +122,17 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
                                           await getResponseFromGemini(
                                               controller.chatController.text);
                                       controller.chatController.clear();
+
+                                      // Set the onComplete callback to update isChatBotActive
+                                      tts.onComplete = () {
+                                        controller.isChatBotActive.value =
+                                            false;
+                                      };
+
                                       try {
                                         await tts.speak(responseText!);
                                         controller.isChatBotActive.value =
-                                            false;
+                                            true; // Set to true when speaking starts
                                       } catch (e) {
                                         controller.isChatBotActive.value =
                                             false;
@@ -130,12 +140,52 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
                                       }
                                     },
                                   ),
-                                  IconButton(
-                                      icon: const Icon(Icons.mic,
-                                          color: Colors.white),
-                                      onPressed: () {
-                                        tts.speak('this is working fine');
-                                      }),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Obx(
+                                    () => controller.voiceInput.value
+                                        ? Tooltip(
+                                            message: 'Try it',
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                controller.voiceInput.value =
+                                                    !controller
+                                                        .voiceInput.value;
+                                                tts.speak(
+                                                    'this is working fine');
+                                              },
+                                              child: Lottie.asset(
+                                                fit: BoxFit.cover,
+                                                animate: true,
+                                                filterQuality:
+                                                    FilterQuality.high,
+                                                'assets/lottie/input_mic.json',
+                                                height: 50,
+                                              ),
+                                            ),
+                                          )
+                                        : Tooltip(
+                                            message: 'Try it',
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                controller.voiceInput.value =
+                                                    !controller
+                                                        .voiceInput.value;
+                                                tts.speak(
+                                                    'this is working fine');
+                                              },
+                                              child: Lottie.asset(
+                                                filterQuality:
+                                                    FilterQuality.high,
+                                                fit: BoxFit.cover,
+                                                animate: false,
+                                                'assets/lottie/input_mic.json',
+                                                height: 50,
+                                              ),
+                                            ),
+                                          ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -151,6 +201,29 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
         ),
       ),
     );
+  }
+
+// ...
+
+  stt.SpeechToText speech = stt.SpeechToText();
+
+  Future<bool> getMicrophonePermission() async {
+    // bool hasPermission = await speech.initialize(
+    //   onError: (error) =>
+    //       print('Error initializing speech recognition: $error'),
+    // );
+    //
+    // if (!hasPermission) {
+    //   bool isPermissionGranted = speech.initialize();
+    //
+    //   if (!isPermissionGranted) {
+    //     print('Microphone permission not granted');
+    //   }
+    //
+    //   return isPermissionGranted;
+    // }
+
+    return true;
   }
 
   // Future<String?> getResponseFromGemini(String textCommand) async {
@@ -210,7 +283,14 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
 
 class TextToSpeech {
   final FlutterTts flutterTts = FlutterTts();
-
+  TextToSpeech() {
+    // Set up the completion handler
+    flutterTts.setCompletionHandler(() {
+      onComplete();
+    });
+  }
+// Function to be called when speech is completed
+  void Function() onComplete = () {};
   Future<void> speak(String text) async {
     await flutterTts.setLanguage('en-US');
     await flutterTts.setPitch(1.0);

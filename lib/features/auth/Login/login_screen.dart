@@ -138,53 +138,8 @@ class LoginScreen extends StatelessWidget {
                                             ),
                                     ),
 
-                                    // const SizedBox(height: 10),
-                                    //
-                                    // // or continue with
-                                    // Row(
-                                    //   children: [
-                                    //     Expanded(
-                                    //       child: Divider(
-                                    //         indent: 20,
-                                    //         thickness: 0.5,
-                                    //         color: Colors.grey[400],
-                                    //       ),
-                                    //     ),
-                                    //     const Padding(
-                                    //       padding: EdgeInsets.symmetric(
-                                    //           horizontal: 10.0),
-                                    //       child: Text(
-                                    //         'Or',
-                                    //         style: TextStyle(
-                                    //             color: Colors.white,
-                                    //             fontSize: 16),
-                                    //       ),
-                                    //     ),
-                                    //     Expanded(
-                                    //       child: Divider(
-                                    //         endIndent: 20,
-                                    //         thickness: 0.5,
-                                    //         color: Colors.grey[400],
-                                    //       ),
-                                    //     ),
-                                    //   ],
-                                    // ),
-
                                     const SizedBox(height: 10),
 
-                                    // google + apple sign in buttons
-
-                                    // SquareTile(
-                                    //   onPressed: () {
-                                    //     controller.googleSignIn();
-                                    //   },
-                                    //   imagePath: 'assets/images/google.png',
-                                    //   title: "Continue with Google",
-                                    // ),
-                                    //
-                                    // const SizedBox(height: 10),
-
-                                    // not a member? register now
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 00.0),
@@ -211,7 +166,10 @@ class LoginScreen extends StatelessWidget {
                                                   child: const Text('Sign Up',
                                                       style: TextStyle(
                                                           color: Color.fromARGB(
-                                                              255, 71, 233, 133),
+                                                              255,
+                                                              71,
+                                                              233,
+                                                              133),
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           fontSize: 18)),
