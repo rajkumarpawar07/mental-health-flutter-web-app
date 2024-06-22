@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'bottom_nav_bar.dart';
+import 'features/admin/admin_home.dart';
 import 'features/auth/Login/login_screen.dart';
 import 'features/auth/SignUp/signup_screen.dart';
 import 'features/chatbot/chatbot_screen.dart';
@@ -73,7 +74,7 @@ class _MyAppState extends State<MyApp> {
         '/forget-password': (context) => const ForgetPasswordScreen(),
         // '/nav-bar': (context) => BottomNavBarScreen(),
         '/home': (context) => const MyHomePage(),
-        '/admin-home': (context) => const MyHomePage(),
+        '/admin-home': (context) => const AdminHome(),
       },
     );
   }

@@ -67,7 +67,8 @@ class UserModel {
         gender: data['Gender'] ?? '',
         password: data['Password'] ?? '',
         phoneNumber: data['PhoneNumber'] ?? '',
-        profilePicture: data['ProfilePicture'] ?? '',
+        profilePicture: data['ProfilePicture'] ??
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdIyWM-O6muANK8OXF6Rlqfa2UN39uIkNB9JA53u8l9V_I3z42yuEjDhuuT4Co9MQRL9M&usqp=CAU',
         streak: data['Streak'] ?? 0,
         lastActive: data['LastActive'] ?? Timestamp.now(),
       );
