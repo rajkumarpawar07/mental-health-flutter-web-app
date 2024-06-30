@@ -1,3 +1,4 @@
+import 'package:ai_chatbot/features/Profile/Controller/profile_screen_controller.dart';
 import 'package:ai_chatbot/features/auth/Login/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,7 +39,7 @@ class AuthenticationRepository extends GetxController {
           email: email, password: password);
     } catch (e) {
       print('Error: $e');
-      throw "Something went wrong. Please try again";
+      throw e.toString();
     }
   }
 
@@ -88,6 +89,43 @@ class AuthenticationRepository extends GetxController {
       Get.offAllNamed('/');
     } catch (e) {
       throw "Something went wrong. Please try again";
+    }
+  }
+
+  Future<void> changeEmailPassword(
+      {required String currentPassword,
+      required String newPassword,
+      required String currentEmail,
+      required String newEmail}) async {
+    final user = await FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final cred = EmailAuthProvider.credential(
+          email: currentEmail, password: currentPassword);
+
+      user.reauthenticateWithCredential(cred).then((value) {
+        if (currentEmail != newEmail) {
+          user.verifyBeforeUpdateEmail(newEmail).then((_) async {
+            //update fire store
+            await ProfileScreenController.instance
+                .updateUserProfileAfterEmailAndPasswordChanged();
+          }).catchError((error) {
+            print('error in changing email => $error');
+          });
+        }
+        if (currentPassword != newPassword) {
+          user.updatePassword(newPassword).then((_) async {
+            //update fire store
+            await ProfileScreenController.instance
+                .updateUserProfileAfterEmailAndPasswordChanged();
+          }).catchError((error) {
+            print('error in changing pass => $error');
+          });
+        }
+      }).catchError((err) {
+        print('error in re-auth => $err');
+      });
+    } else {
+      print('User is null');
     }
   }
 }

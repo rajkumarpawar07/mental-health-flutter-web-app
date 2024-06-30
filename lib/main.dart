@@ -3,10 +3,12 @@ import 'package:ai_chatbot/services/auth_repo.dart';
 import 'package:ai_chatbot/testScreens/test_screen_1.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'bottom_nav_bar.dart';
+import 'features/Profile/subScreens/edit_profile_screen.dart';
 import 'features/admin/admin_home.dart';
 import 'features/auth/Login/login_screen.dart';
 import 'features/auth/SignUp/signup_screen.dart';
@@ -35,26 +37,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   User? authUser;
+  var _alertShowing = false;
+  var _index = 0;
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(milliseconds: 100), screenRedirect);
-  }
-
-  void screenRedirect() async {
-    // final deviceStorage = GetStorage();
-    final _auth = FirebaseAuth.instance;
-    final user = _auth.currentUser;
-    authUser = user;
-    // if (user != null) {
-    //   if (user.emailVerified) {
-    //     Navigator.pushNamed(context, '/home');
-    //   } else {
-    //     Navigator.pushNamed(context, '/home');
-    //   }
-    // } else {
-    //   Navigator.pushNamed(context, '/home');
-    // }
   }
 
   // This widget is the root of your application.
@@ -75,6 +63,7 @@ class _MyAppState extends State<MyApp> {
         // '/nav-bar': (context) => BottomNavBarScreen(),
         '/home': (context) => const MyHomePage(),
         '/admin-home': (context) => const AdminHome(),
+        '/edit-profile': (context) => const EditProfileScreen(),
       },
     );
   }

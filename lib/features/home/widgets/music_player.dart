@@ -83,15 +83,17 @@ class _MusicPlayerState extends State<MusicPlayer> {
             });
           },
           icon: Container(
-            height: MediaQuery.of(context).size.width < 500 ? 30 : 50,
-            width: MediaQuery.of(context).size.width < 500 ? 30 : 50,
+            height: MediaQuery.of(context).size.width < 700 ? 30 : 50,
+            width: MediaQuery.of(context).size.width < 700 ? 30 : 50,
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.black,
             ),
-            child: Icon(
-              _controller!.value.isPlaying ? Icons.pause : Icons.play_arrow,
-              color: Colors.white,
+            child: Center(
+              child: Icon(
+                _controller!.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                color: Colors.white,
+              ),
             ),
           ),
         ),

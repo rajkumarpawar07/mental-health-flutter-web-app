@@ -51,7 +51,7 @@ class LoginScreenController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(10),
         colorText: Colors.green,
-        duration: const Duration(seconds: 2),
+        duration: const Duration(seconds: 1),
       );
 
       // redirect
@@ -61,7 +61,7 @@ class LoginScreenController extends GetxController {
       isLoading.value = false;
       Get.snackbar(
         "Oh Snap!",
-        "Something went wrong. Please try again",
+        e.toString(),
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(10),
         colorText: Colors.red,
@@ -87,17 +87,11 @@ class LoginScreenController extends GetxController {
         // User already active today
         print('User already active today');
         return;
-      } else if (_isNextDay(now, lastActive)) {
+      } else {
         // Continue streak
         await _firestore.collection('Users').doc(userId).update({
           'LastActive': now,
           'Streak': currentStreak + 1,
-        });
-      } else {
-        // Reset streak
-        await _firestore.collection('Users').doc(userId).update({
-          'LastActive': now,
-          'Streak': 1,
         });
       }
     } else {

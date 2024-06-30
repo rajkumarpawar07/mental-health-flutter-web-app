@@ -1,14 +1,15 @@
 import 'package:ai_chatbot/features/Profile/Controller/profile_screen_controller.dart';
 import 'package:ai_chatbot/features/Profile/profile_screen.dart';
 import 'package:ai_chatbot/features/chatbot/chatbot_screen.dart';
+import 'package:ai_chatbot/features/home/controller/home_controller.dart';
 import 'package:ai_chatbot/features/home/widgets/music_player.dart';
+import 'package:ai_chatbot/features/home/widgets/pie_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
-
-import '../../testScreens/test_screen_1.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -19,6 +20,112 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
+  void _showRatingDialog(BuildContext context, HomeController controller) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          ),
+          // title: Text("Tell us how you're feeling today",style: Text,),
+          content: RatingBar.builder(
+            itemPadding: EdgeInsets.symmetric(horizontal: 5),
+            initialRating: 3,
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: false,
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              switch (index) {
+                case 0:
+                  return Icon(
+                    Icons.sentiment_very_dissatisfied,
+                    color: Colors.red,
+                  );
+                case 1:
+                  return Icon(
+                    Icons.sentiment_dissatisfied,
+                    color: Colors.redAccent,
+                  );
+                case 2:
+                  return Icon(
+                    Icons.sentiment_neutral,
+                    color: Colors.amber,
+                  );
+                case 3:
+                  return Icon(
+                    Icons.sentiment_satisfied,
+                    color: Colors.lightGreen,
+                  );
+                case 4:
+                  return Icon(
+                    Icons.sentiment_very_satisfied,
+                    color: Colors.green,
+                  );
+                default:
+                  return Icon(
+                    Icons.sentiment_neutral,
+                    color: Colors.grey,
+                  );
+              }
+            },
+            onRatingUpdate: (rating) {
+              print(rating);
+              controller.currentMoodRating.value = rating.floor();
+              ;
+            },
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    // backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: Colors.grey, // Border color
+                        width: 1, // Border width
+                      ),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Close',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue, // Button background color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    // Implement the submit action
+
+                    controller
+                        .addMoodRating(controller.currentMoodRating.value);
+                    print(controller.currentMoodRating.value);
+
+                    Navigator.of(context)
+                        .pop(); // Close the dialog after submitting
+                  },
+                  child: Text('Submit', style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            )
+          ],
+        );
+      },
+    );
+  }
+
   final List<Map<String, dynamic>> items = [
     {
       'title': 'Noam Shpancer',
@@ -137,6 +244,7 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileScreenController());
+    final homeController = Get.put(HomeController());
     double width = MediaQuery.of(context).size.width;
     return showStreak
         ? Scaffold(
@@ -155,12 +263,18 @@ class _MyHomePageState extends State<MyHomePage>
                     surfaceTintColor: Colors.white,
                     floating: true,
                     pinned: false,
-                    expandedHeight: 50.0, // Reduced height
+                    // expandedHeight: 50.0, // Reduced height
                     flexibleSpace: FlexibleSpaceBar(
+                      titlePadding: const EdgeInsets.only(
+                        left: 24,
+                        bottom: 10,
+                      ),
                       title: MediaQuery.of(context).size.width > 500
-                          ? Text("EzeeMind",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 24))
+                          ? const Text("EzeeMind",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w500))
                           : null,
                       background: Container(
                         color: Colors.black,
@@ -206,10 +320,10 @@ class _MyHomePageState extends State<MyHomePage>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(
-                          height: 50,
+                          height: 70,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -225,8 +339,8 @@ class _MyHomePageState extends State<MyHomePage>
                                           fontSize: MediaQuery.of(context)
                                                       .size
                                                       .width >
-                                                  500
-                                              ? 40
+                                                  540
+                                              ? 42
                                               : 32,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -239,8 +353,8 @@ class _MyHomePageState extends State<MyHomePage>
                                           fontSize: MediaQuery.of(context)
                                                       .size
                                                       .width >
-                                                  500
-                                              ? 40
+                                                  540
+                                              ? 42
                                               : 32,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -268,8 +382,8 @@ class _MyHomePageState extends State<MyHomePage>
                                                 fontSize: MediaQuery.of(context)
                                                             .size
                                                             .width >
-                                                        500
-                                                    ? 50
+                                                        540
+                                                    ? 48
                                                     : 32,
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -281,8 +395,8 @@ class _MyHomePageState extends State<MyHomePage>
                                                 fontSize: MediaQuery.of(context)
                                                             .size
                                                             .width >
-                                                        500
-                                                    ? 50
+                                                        540
+                                                    ? 48
                                                     : 32,
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -295,53 +409,259 @@ class _MyHomePageState extends State<MyHomePage>
                                 ),
                               ],
                             ),
-                            Spacer(),
-                            MediaQuery.of(context).size.width > 1010
-                                ? Column(
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text:
-                                                  '${controller.streak.toString()} ',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: MediaQuery.of(context)
-                                                            .size
-                                                            .width >
-                                                        500
-                                                    ? 40
-                                                    : 32,
-                                                fontWeight: FontWeight.bold,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                // Spacer(),
+                                MediaQuery.of(context).size.width > 720
+                                    ? Stack(
+                                        alignment: Alignment.center,
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          Card(
+                                            surfaceTintColor: Colors.white,
+                                            color: Colors.white,
+                                            elevation: 10,
+                                            margin: const EdgeInsets.only(
+                                                right: 24,
+                                                left: 24,
+                                                top: 24,
+                                                bottom: 16),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 24,
+                                                  left: 24,
+                                                  top: 24,
+                                                  bottom: 16),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    '${controller.streak}',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                      .size
+                                                                      .width >
+                                                                  500
+                                                              ? 40
+                                                              : 32,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    'Days',
+                                                    style: TextStyle(
+                                                      color: Colors.black45,
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                      .size
+                                                                      .width >
+                                                                  500
+                                                              ? 32
+                                                              : 24,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                            TextSpan(
-                                              text: 'Consecutive days',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: MediaQuery.of(context)
-                                                            .size
-                                                            .width >
-                                                        500
-                                                    ? 40
-                                                    : 32,
-                                                fontWeight: FontWeight.bold,
+                                          ),
+                                          Positioned(
+                                            top: -70,
+                                            child: Center(
+                                              child: Lottie.asset(
+                                                'assets/lottie/fire_streak.json',
+                                                height: 150,
+                                                width: 150,
+                                                fit: BoxFit.cover,
                                               ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : SizedBox.shrink(),
+                                MediaQuery.of(context).size.width > 1150
+                                    ? Container(
+                                        height: 350,
+                                        padding: EdgeInsets.only(
+                                            top: 16, left: 16, right: 16),
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal:
+                                                16.0), // Add margin between containers
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(16.0),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(0.5),
+                                              spreadRadius: 5,
+                                              blurRadius: 7,
+                                              offset: Offset(0, 3),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                    ],
-                                  )
-                                : Container(),
-                            Lottie.asset('assets/lottie/fire_streak.json',
-                                height: 100),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                                height: 300,
+                                                child: PieChartSample3()),
+                                            TextButton(
+                                                onPressed: () {
+                                                  _showRatingDialog(
+                                                      context, homeController);
+                                                },
+                                                child: Text(
+                                                  "Tell us how you're felling?",
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ))
+                                          ],
+                                        ),
+                                      )
+                                    : SizedBox(),
+                              ],
+                            ),
                           ],
                         ),
                         const SizedBox(
-                          height: 50,
+                          height: 30,
                         ),
+                        MediaQuery.of(context).size.width < 1150
+                            ? Padding(
+                                padding: const EdgeInsets.only(left: 24.0),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 10,
+                                      height: 25,
+                                      decoration: const BoxDecoration(
+                                        color:
+                                            Color.fromARGB(255, 71, 233, 133),
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(5),
+                                          bottomRight: Radius.circular(5),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'User Analytics',
+                                      style: TextStyle(
+                                        color: Colors
+                                            .black, // Change this to your desired color
+                                        fontSize:
+                                            MediaQuery.of(context).size.width >
+                                                    500
+                                                ? 32
+                                                : 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : SizedBox.shrink(),
+
+                        const SizedBox(
+                          height: 5,
+                        ),
+
+                        MediaQuery.of(context).size.width < 1150
+                            ? Padding(
+                                padding: EdgeInsets.all(
+                                    16.0), // Add padding around the row
+                                child: Row(
+                                  children: [
+                                    // Expanded(
+                                    //   flex: 3,
+                                    //   child: Container(
+                                    //     padding: EdgeInsets.all(24),
+                                    //     height: 350,
+                                    //     margin: EdgeInsets.symmetric(
+                                    //         horizontal:
+                                    //             16.0), // Add margin between containers
+                                    //     decoration: BoxDecoration(
+                                    //       color: Colors.white,
+                                    //       borderRadius: BorderRadius.circular(16.0),
+                                    //       boxShadow: [
+                                    //         BoxShadow(
+                                    //           color: Colors.grey.withOpacity(0.5),
+                                    //           spreadRadius: 5,
+                                    //           blurRadius: 7,
+                                    //           offset: Offset(0, 3),
+                                    //         ),
+                                    //       ],
+                                    //     ),
+                                    //     // child: LineChartExp(
+                                    //     //   isShowingMainData: true,
+                                    //     // ),
+                                    //
+                                    //     child: BarChartExp(),
+                                    //   ),
+                                    // ),
+                                    // Expanded(
+                                    //   flex: 2,
+                                    //   child:
+                                    Container(
+                                      height: 350,
+                                      padding: EdgeInsets.only(
+                                          top: 16, left: 16, right: 16),
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal:
+                                              16.0), // Add margin between containers
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 5,
+                                            blurRadius: 7,
+                                            offset: Offset(0, 3),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                              height: 300,
+                                              child: PieChartSample3()),
+                                          TextButton(
+                                              onPressed: () {
+                                                _showRatingDialog(
+                                                    context, homeController);
+                                              },
+                                              child: Text(
+                                                "Tell us how you're felling?",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ))
+                                        ],
+                                      ),
+                                    ),
+                                    // ),
+                                  ],
+                                ),
+                              )
+                            : SizedBox.shrink(),
+
+                        const SizedBox(
+                          height: 30,
+                        ),
+
                         Padding(
                           padding: const EdgeInsets.only(left: 24.0),
                           child: Row(
@@ -367,7 +687,7 @@ class _MyHomePageState extends State<MyHomePage>
                                       .black, // Change this to your desired color
                                   fontSize:
                                       MediaQuery.of(context).size.width > 500
-                                          ? 30
+                                          ? 32
                                           : 24,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -399,7 +719,7 @@ class _MyHomePageState extends State<MyHomePage>
                               Container(
                                 width: 10,
                                 height: 25,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: Color.fromARGB(255, 71, 233, 133),
                                   borderRadius: BorderRadius.only(
                                     topRight: Radius.circular(5),
@@ -417,7 +737,7 @@ class _MyHomePageState extends State<MyHomePage>
                                       .black, // Change this to your desired color
                                   fontSize:
                                       MediaQuery.of(context).size.width > 500
-                                          ? 30
+                                          ? 32
                                           : 24,
                                   fontWeight: FontWeight.bold,
                                 ),
