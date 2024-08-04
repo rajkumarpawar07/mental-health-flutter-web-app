@@ -10,6 +10,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
+import 'package:toastification/toastification.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -30,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage>
           ),
           // title: Text("Tell us how you're feeling today",style: Text,),
           content: RatingBar.builder(
-            itemPadding: EdgeInsets.symmetric(horizontal: 5),
+            itemPadding: const EdgeInsets.symmetric(horizontal: 5),
             initialRating: 3,
             minRating: 1,
             direction: Axis.horizontal,
@@ -39,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage>
             itemBuilder: (context, index) {
               switch (index) {
                 case 0:
-                  return Icon(
+                  return const Icon(
                     Icons.sentiment_very_dissatisfied,
                     color: Colors.red,
                   );
@@ -483,7 +484,8 @@ class _MyHomePageState extends State<MyHomePage>
                                           ),
                                         ],
                                       )
-                                    : SizedBox.shrink(),
+                                    : const SizedBox.shrink(),
+
                                 MediaQuery.of(context).size.width > 1150
                                     ? Container(
                                         height: 350,
@@ -510,19 +512,33 @@ class _MyHomePageState extends State<MyHomePage>
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            SizedBox(
+                                            Container(
                                                 height: 300,
                                                 child: PieChartSample3()),
                                             TextButton(
+                                                style: TextButton.styleFrom(
+                                                  shape: RoundedRectangleBorder(
+                                                    side: BorderSide(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.3),
+                                                      width: 1,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
+                                                ),
                                                 onPressed: () {
                                                   _showRatingDialog(
                                                       context, homeController);
                                                 },
-                                                child: Text(
+                                                child: const Text(
                                                   "Tell us how you're felling?",
                                                   style: TextStyle(
-                                                      color: Colors.black),
-                                                ))
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.blue),
+                                                )),
                                           ],
                                         ),
                                       )

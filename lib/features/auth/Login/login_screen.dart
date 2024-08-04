@@ -92,78 +92,106 @@ class LoginScreen extends StatelessWidget {
                             child: Form(
                               key: controller.loginForKey,
                               child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.03),
-                                    // username textfield
-                                    MyTextField(
-                                      controller: controller.email,
-                                      hintText: 'Email',
-                                      obscureText: false,
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Obx(
-                                      () => MyPasswordTextField(
-                                        onPressed: () =>
-                                            controller.hidePassword.value =
-                                                !controller.hidePassword.value,
-                                        controller: controller.password,
-                                        hintText: 'Password',
-                                        obscureText:
-                                            controller.hidePassword.value,
-                                        icon: Icon(controller.hidePassword.value
-                                            ? Icons.visibility_off
-                                            : Icons.remove_red_eye),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.03),
+                                      // username textfield
+                                      MyTextField(
+                                        controller: controller.email,
+                                        hintText: 'Email',
+                                        obscureText: false,
                                       ),
-                                    ),
+                                      const SizedBox(height: 10),
+                                      Obx(
+                                        () => MyPasswordTextField(
+                                          onPressed: () => controller
+                                                  .hidePassword.value =
+                                              !controller.hidePassword.value,
+                                          controller: controller.password,
+                                          hintText: 'Password',
+                                          obscureText:
+                                              controller.hidePassword.value,
+                                          icon: Icon(
+                                              controller.hidePassword.value
+                                                  ? Icons.visibility_off
+                                                  : Icons.remove_red_eye),
+                                        ),
+                                      ),
 
-                                    const SizedBox(height: 10),
+                                      const SizedBox(height: 10),
 
-                                    // sign in button
-                                    Obx(
-                                      () => controller.isLoading.value
-                                          ? MyButton(
-                                              onTap: (() {}),
-                                              showLoading: true,
-                                            )
-                                          : MyButton(
-                                              onTap: (() {
-                                                controller
-                                                    .emailAndPasswordSignIn();
-                                              }),
-                                            ),
-                                    ),
-
-                                    const SizedBox(height: 10),
-
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 00.0),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            // ignore: prefer_const_literals_to_create_immutables
-                                            children: [
-                                              const SizedBox(width: 10),
-                                              const Text(
-                                                'Don\'t have an account?',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 18),
-                                                textAlign: TextAlign.start,
+                                      // sign in button
+                                      Obx(
+                                        () => controller.isLoading.value
+                                            ? MyButton(
+                                                onTap: (() {}),
+                                                showLoading: true,
+                                              )
+                                            : MyButton(
+                                                onTap: (() {
+                                                  controller
+                                                      .emailAndPasswordSignIn();
+                                                }),
                                               ),
-                                              Expanded(
-                                                child: TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pushNamed(
-                                                          context, '/signUp'),
-                                                  child: const Text('Sign Up',
+                                      ),
+
+                                      const SizedBox(height: 10),
+
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 00.0),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              // ignore: prefer_const_literals_to_create_immutables
+                                              children: [
+                                                const SizedBox(width: 10),
+                                                const Text(
+                                                  'Don\'t have an account?',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 18),
+                                                  textAlign: TextAlign.start,
+                                                ),
+                                                Expanded(
+                                                  child: TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pushNamed(
+                                                            context, '/signUp'),
+                                                    child: const Text('Sign Up',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    71,
+                                                                    233,
+                                                                    133),
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 18)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Get.toNamed(
+                                                          '/forget-password');
+                                                    },
+                                                    child: const Text(
+                                                      'Forgot Password?',
                                                       style: TextStyle(
                                                           color: Color.fromARGB(
                                                               255,
@@ -172,35 +200,15 @@ class LoginScreen extends StatelessWidget {
                                                               133),
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          fontSize: 18)),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              TextButton(
-                                                  onPressed: () {
-                                                    Get.toNamed(
-                                                        '/forget-password');
-                                                  },
-                                                  child: const Text(
-                                                    'Forgot Password?',
-                                                    style: TextStyle(
-                                                        color: Color.fromARGB(
-                                                            255, 71, 233, 133),
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18),
-                                                  )),
-                                            ],
-                                          ),
-                                        ],
+                                                          fontSize: 18),
+                                                    )),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

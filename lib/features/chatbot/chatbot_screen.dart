@@ -1,10 +1,9 @@
 import 'dart:convert';
+import 'package:ai_chatbot/utils/custom_toast.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:lottie/lottie.dart';
 import 'package:http/http.dart' as http;
 import 'controller/chat_bot_controller.dart';
@@ -83,7 +82,7 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
                     ),
                     children: <TextSpan>[
                       TextSpan(
-                        text: "I'm listening",
+                        text: "I'm listening...",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -101,8 +100,8 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
                           animate: controller.isChatBotActive.value,
                           'assets/lottie/ai_animation.json',
                           // Replace with your SVG asset
-                          width: 150,
-                          height: 150,
+                          width: 200,
+                          height: 200,
                         ),
                       ),
                     ),
@@ -112,8 +111,8 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
                           animate: controller.isChatBotActive.value,
                           'assets/lottie/home_animation.json',
                           // Replace with your SVG asset
-                          width: 150,
-                          height: 150,
+                          width: 200,
+                          height: 200,
                         ),
                       ),
                     ),
@@ -168,7 +167,7 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
                                       print('send button pressed');
                                       tts.stopTheSpeech();
                                       final responseText =
-                                          await getResponseFromGemini(
+                                          await getMentalHealthAnalysisFromGemini(
                                               chatController.text);
                                       chatController.clear();
 
@@ -189,58 +188,6 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
                                       }
                                     },
                                   ),
-                                  // SizedBox(
-                                  //   width: 5,
-                                  // ),
-                                  // Obx(
-                                  //   () => controller.voiceInput.value
-                                  //       ? Tooltip(
-                                  //           message: 'Try it',
-                                  //           child: GestureDetector(
-                                  //             onTap: () {
-                                  //               speech.isListening
-                                  //                   ? stopListening()
-                                  //                   : startListening();
-                                  //               controller.voiceInput.value =
-                                  //                   !controller
-                                  //                       .voiceInput.value;
-                                  //               tts.speak(
-                                  //                   'this is working fine');
-                                  //             },
-                                  //             child: Lottie.asset(
-                                  //               fit: BoxFit.cover,
-                                  //               animate: true,
-                                  //               filterQuality:
-                                  //                   FilterQuality.high,
-                                  //               'assets/lottie/input_mic.json',
-                                  //               height: 50,
-                                  //             ),
-                                  //           ),
-                                  //         )
-                                  //       : Tooltip(
-                                  //           message: 'Try it',
-                                  //           child: GestureDetector(
-                                  //             onTap: () {
-                                  //               speech.isListening
-                                  //                   ? stopListening()
-                                  //                   : startListening();
-                                  //               controller.voiceInput.value =
-                                  //                   !controller
-                                  //                       .voiceInput.value;
-                                  //               tts.speak(
-                                  //                   'this is working fine');
-                                  //             },
-                                  //             child: Lottie.asset(
-                                  //               filterQuality:
-                                  //                   FilterQuality.high,
-                                  //               fit: BoxFit.cover,
-                                  //               animate: false,
-                                  //               'assets/lottie/input_mic.json',
-                                  //               height: 50,
-                                  //             ),
-                                  //           ),
-                                  //         ),
-                                  // ),
                                   Obx(
                                     () => Container(
                                       decoration: BoxDecoration(
@@ -263,7 +210,7 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
                                                   true;
                                               print('send button pressed');
                                               final responseText =
-                                                  await getResponseFromGemini(
+                                                  await getMentalHealthAnalysisFromGemini(
                                                       chatController.text);
 
                                               // Set the onComplete callback to update isChatBotActive
@@ -322,18 +269,79 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
   //   return response.text;
   // }
 
-  Future<String?> getResponseFromGemini(String textCommand) async {
+  Future<String?> getMentalHealthAnalysisFromGemini(String userInput) async {
     const String apiKey =
         'AIzaSyB9PPIcUhgvCROjdkMzfcmPTsiEo0Nbytw'; // Replace with your actual API key
     const String apiUrl =
         'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=$apiKey';
 
-    // Create the request payload
+    // Create a more specific prompt for mental health analysis
+    String prompt = '''
+You are a compassionate mental health counselor. A client has shared the following statement with you:
+
+"$userInput"
+
+Provide a brief, caring response as if speaking directly to the client.
+
+Keep your response concise (3-5 sentences) and conversational. Do not use special characters, bullet points, or section titles. Write in a single, flowing paragraph.
+''';
+
+    // Create the request payload with the new prompt
     final Map<String, dynamic> payload = {
       "contents": [
         {
           "parts": [
-            {"text": textCommand}
+            {"text": prompt}
+          ]
+        }
+      ]
+    };
+
+    // Convert payload to JSON
+    final String jsonPayload = jsonEncode(payload);
+
+    // Make the HTTP POST request
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonPayload,
+    );
+    await getUserMoodFromGemini(userInput);
+
+    if (response.statusCode == 200) {
+      // Parse the response body
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      // Extract the text part
+      final String analysis =
+          responseData['candidates'][0]['content']['parts'][0]['text'];
+      print('Mental Health Professional Analysis: $analysis');
+
+      return analysis;
+    } else {
+      print('Request failed with status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return 'Unable to perform analysis at this time.';
+    }
+  }
+
+  Future<String?> getUserMoodFromGemini(String textCommand) async {
+    const String apiKey =
+        'AIzaSyB9PPIcUhgvCROjdkMzfcmPTsiEo0Nbytw'; // Replace with your actual API key
+    const String apiUrl =
+        'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=$apiKey';
+
+    // Create the request payload with a prompt for mood analysis
+    final Map<String, dynamic> payload = {
+      "contents": [
+        {
+          "parts": [
+            {
+              "text":
+                  "Analyze the mood of the following text. Respond with a single word that best describes the overall emotional tone or mood. Here's the text: $textCommand"
+            }
           ]
         }
       ]
@@ -355,15 +363,18 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
       // Parse the response body
       final Map<String, dynamic> responseData = jsonDecode(response.body);
 
-      // Extract the text part
-      final String text =
-          responseData['candidates'][0]['content']['parts'][0]['text'];
-      print('Response text: $text');
-      return text;
+      // Extract the text part (which should be the mood)
+      final String mood =
+          responseData['candidates'][0]['content']['parts'][0]['text'].trim();
+      print('Detected mood: $mood');
+      CustomToast.infoToast(
+          context, mood, "It sounds like you're feeling $mood!");
+
+      return mood;
     } else {
       print('Request failed with status: ${response.statusCode}');
       print('Response body: ${response.body}');
-      return '';
+      return 'Unknown';
     }
   }
 }
