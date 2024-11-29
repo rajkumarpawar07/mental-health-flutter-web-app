@@ -1,18 +1,13 @@
 import 'package:ai_chatbot/features/auth/forgetPassword/forget_password_screen.dart';
 import 'package:ai_chatbot/services/auth_repo.dart';
-import 'package:ai_chatbot/testScreens/test_screen_1.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'bottom_nav_bar.dart';
 import 'features/Profile/subScreens/edit_profile_screen.dart';
 import 'features/admin/admin_home.dart';
 import 'features/auth/Login/login_screen.dart';
 import 'features/auth/SignUp/signup_screen.dart';
-import 'features/chatbot/chatbot_screen.dart';
 import 'features/home/home_screen.dart';
 
 void main() async {

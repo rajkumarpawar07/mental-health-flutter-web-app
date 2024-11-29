@@ -61,6 +61,7 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
   }
 
   final TextToSpeech tts = TextToSpeech();
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(AiChatBotController());
@@ -271,7 +272,7 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
 
   Future<String?> getMentalHealthAnalysisFromGemini(String userInput) async {
     const String apiKey =
-        'AIzaSyB9PPIcUhgvCROjdkMzfcmPTsiEo0Nbytw'; // Replace with your actual API key
+        'AIzaSyBDEfq_tzZkX2uhXPlNBCg7GD4U5osBNNw'; // Replace with your actual API key
     const String apiUrl =
         'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=$apiKey';
 
@@ -395,6 +396,7 @@ class TextToSpeech {
 
   // Function to be called when speech is completed
   void Function() onComplete = () {};
+
   Future<void> speak(String text) async {
     await flutterTts.setLanguage('en-US');
     await flutterTts.setPitch(1.0);
